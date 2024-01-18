@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+    position: relative;
+    height: 100vh;
+    margin: 0;
+    background: url("/filemanagement/src/main/resources/static/img/home-bg.jpg") center/cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+
+    }
+
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+    }
+
+    .card .card-body .card-title{
+        font-size: 40px;
+        margin-bottom: 30px;
+    }
+
+    .menu{
+      border-radius: 6px;
+      margin-left: 10px !important;
+      margin-top: -0.5px !important;
+    }
+
+    .home, .people,.save, .log-out{
+      display: block;
+      text-decoration: none;
+      color: black;
+    }
+
+    .people i{
+      border-radius:6px ;
+
+    }
+
+    .form-control{
+      background-color: #e1dede;
+    }
+
+
+
+    .file{
+      background-color: #e1dede;
+      padding: 10px 20px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+
+
+    .folder-container {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px;
+    }
+
+    .folder {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 10px;
+        padding: 15px;
+        width: 150px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .folder:hover {
+        background-color: #f0f0f0;
+    }
+
+    .folder .folder-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .folder .folder-name {
+        font-size: 16px;
+    }
+
+    .sub-folder-container {
+        display: none;
+        padding-top: 10px;
+    }
+
+    .sub-folder {
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .sub-folder:hover {
+        background-color: #f9f9f9;
+    }
+
+
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 50px;
+      border-radius: 8px;
+      text-align: center;
+      width: 500px;
+
+    }
+
+    .close-btn {
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    </style>
+    <!-- FontAwesome 6.2.0 CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <div class="overlay"></div>
+    <div class="card" style="width: 1300px; height: 600px">
+      <div class="row">
+        <div
+          style="height: 600px"
+          class="col-1 left-content text-center menu bg-primary m-0 p-0"
+        >
+          <a class="home text-light text-center mt-5" href="home"
+            ><i class="fa fa-home"></i
+          ></a>
+          <a class="people text-center mt-5" href="/groups"
+            ><i class="fa fa-users text-center bg-light p-4"></i
+          ></a>
+          <a class="people text-center mt-5" href="sharedFiles"
+          ><i class="fa fa-share text-center bg-light p-4"></i
+          ></a>
+          <a class="save text-light text-center mt-5" href="save"
+            ><i class="fa fa-save"></i
+          ></a>
+          <a class="log-out text-light text-center mt-5"
+            ><i class="fa fa-sign-out-alt"></i
+          ></a>
+        </div>
+        <div class="col-10 ps-5 right-content">
+          <div class="row header mt-4">
+            <div class="search col-9">
+              <div class="input-group mb-3 w-75">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search..."
+                  aria-label="Recipient's username"
+                  aria-describedby="button-addon2"
+                />
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  id="button-addon2"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <div class="user col-3" style="text-align: right">
+              <span>Username</span>
+              <span style="margin-left: 10px"><i class="fa fa-user"></i></span>
+            </div>
+          </div>
+
+          <div class="row header mt-4">
+            <div class="search col-6">
+              <h3 class="fw-bold">Group Dashboard</h3>
+            </div>
+
+            <div class="user col-6" style="text-align: right">
+              <button class="btn btn-primary" onclick="openModal()">Create a group</button>
+
+              <div id="myModal" class="modal-overlay">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create a group</h1>
+                      <button type="button"  onclick="closeModal()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body my-3">
+                      <form th:action="@{/groups/new}" method="post" th:object="${group}">
+                        <div class="input-group mb-3">
+                          <label class="input-group-text" for="groupName">Group Name</label>
+                          <input class="form-control" type="text" id="groupName" name="groupName" th:field="*{groupName}" required/><br/>
+                        </div>
+                        <button type="submit" value="Create Group" class="btn btn-primary">Create</button>
+                      </form>
+
+
+                    </div>
+
+                  </div>
+                </div>  
+              </div>
+            </div>
+          </div>
+
+          <div class="folder-container row" th:each="group1:${groups}">
+            <a th:href="@{/groups/{groupId}(groupId = ${group1.id})}">
+            <div class="folder col-3" >
+              <div class="folder-icon">📂</div>
+              <div class="folder-name" th:text="${group1.groupUser.groupName}">Group 1</div>
+            </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      function openFolder(folder) {
+        // Thực hiện chuyển hướng trang web khi double click vào folder
+        window.location.href = "sub-group.html";
+      }
+    </script>
+
+    <script>
+      function openModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "flex";
+      }
+
+      function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+      }
+    </script>
+  </body>
+</html>
